@@ -11,21 +11,42 @@ custom:
 
 resources:
   Resources:
-    CognitoAuthenticatedUserPool:
+    # Cognito - User pool
+    CognitoUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.stage}-authenticated-user-pool
+        UserPoolName: ${self:custom.stage}-user-pool
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
           - email
-    CognitoAuthenticatedUserPoolClient:
+        Schema:
+          - AttributeDataType: String
+            Mutable: true
+            Required: false
+            Name: Address
+          - AttributeDataType: String
+            Mutable: true
+            Required: false
+            Name: Name 
+    # Cognito - Client
+    CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: ${self:custom.stage}-authenticated-user-pool-client
+        ClientName: ${self:custom.stage}-user-pool-client
         UserPoolId:
-          Ref: CognitoAuthenticatedUserPool
+          Ref: CognitoUserPool
         ExplicitAuthFlows:
           - ALLOW_ADMIN_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
-        GenerateSecret: false
+    # Cognito - Identity
+    CognitoIdentityPool:
+      Type: AWS::Cognito::IdentityPool
+      Properties:
+        IdentityPoolName: ${self:custom.stage}-identity-pool
+        AllowUnauthenticatedIdentities: false
+        CognitoIdentityProviders:
+          - ClientId:
+              Ref: CognitoUserPoolClient
+            ProviderName:
+              Fn::GetAtt: [CognitoUserPool, ProviderName]
