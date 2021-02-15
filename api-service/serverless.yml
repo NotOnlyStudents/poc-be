@@ -7,9 +7,70 @@ service: api
 provider:
   name: aws
   runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
   stage: dev
-  region: us-east-1
+  region: eu-west-1
+  profile: sls-admin
+  lambdaHashingVersion: 20201221
+  environment:
+    ENV: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    UNDERLYING_CLIENT: 'awssns'
+    SLS_DEBUG: '*'
+    productTable: ${self:custom.productsTable}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: '*'
+
+
+plugins:
+  - serverless-plugin-typescript
+
+custom:
+  productsTable: products-table
+
+functions:
+  hello:
+    handler: src/endpoints/hello.handler
+    description: Says hello!
+    events:
+      - http:
+          path: /
+          method: GET
+          cors: true
+  getProduct:
+    handler: src/endpoints/getProduct.handler
+    description: Get product by ID
+    events:
+      - http:
+          path: product/{ID}
+          method: GET
+          cors: true
+  postProduct:
+    handler: src/endpoints/postProduct.handler
+    description: Add a new product by ID
+    events:
+      - http:
+          path: product/{ID}
+          method: POST
+          cors: true
+
+resources:
+  Resources: 
+    ProductsTable: 
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.productsTable}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -39,17 +100,6 @@ provider:
 #  exclude:
 #    - exclude-me.js
 #    - exclude-me-dir/**
-
-functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: /
-          method: get
-
-plugins:
-  - serverless-plugin-typescript
 
 # functions:
 #   hello:
