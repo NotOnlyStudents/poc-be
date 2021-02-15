@@ -14,7 +14,6 @@ provider:
   environment:
     ENV: ${self:provider.stage}
     REGION: ${self:provider.region}
-    UNDERLYING_CLIENT: 'awssns'
     SLS_DEBUG: '*'
     productTable: ${self:custom.productsTable}
   iamRoleStatements:
@@ -23,6 +22,13 @@ provider:
         - dynamodb:*
       Resource: '*'
 
+package:
+  individually: true
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#   - node_modules
 
 plugins:
   - serverless-plugin-typescript
@@ -91,15 +97,6 @@ resources:
 # you can define service wide environment variables here
 #  environment:
 #    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
 
 # functions:
 #   hello:

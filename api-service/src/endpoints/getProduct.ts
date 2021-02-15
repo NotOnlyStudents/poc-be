@@ -3,9 +3,10 @@ import { Dynamo } from '../common/Dynamo';
 
 import { Responses } from '../common/responses';
 
-const productsTable: string = process.env.productsTable as string;
+const productsTable = 'products-table';
 
 export const handler: Handler = async (event: any) => {
+  console.log(event);
   if (!event.pathParameters || !event.pathParameters.ID) {
       return Responses._400({ message: 'Missing the ID from the path' }); 
   }
@@ -16,9 +17,11 @@ export const handler: Handler = async (event: any) => {
       return null;
   });
 
+  console.log(product);
+
   if (!product) {
       return Responses._400({ message: 'Failed to get product by ID' });
   }
 
-  return Responses._200({ product });
+  return Responses._200({ product: Promise.resolve(product) });
 }
