@@ -1,27 +1,30 @@
 import { Handler } from 'aws-lambda';
-import { Dynamo } from '../common/Dynamo';
+import { DynamoDB } from 'aws-sdk';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
 
+import { Product } from '../types/Product';
 import { Responses } from '../common/responses';
 
-const productsTable = 'products-table';
+const client = new DynamoDB();
+const mapper = new DataMapper({ client })
 
 export const handler: Handler = async (event: any) => {
   console.log(event);
   if (!event.pathParameters || !event.pathParameters.ID) {
-      return Responses._400({ message: 'Missing the ID from the path' }); 
+    return Responses._400({ message: 'Missing the ID from the path' }); 
   }
 
   const ID = event.pathParameters.ID;
-  const product = Dynamo.get(ID, productsTable).catch(err => {
-      console.log('Error in Dynamo Get', err);
-      return null;
+  const toFetchProduct = new Product(ID);
+
+  const product: Product = await mapper.get(toFetchProduct).catch((err: any) => {
+    console.log('Error fetching data from DynamoDB', err);
+    return null;
   });
 
-  console.log(product);
-
   if (!product) {
-      return Responses._400({ message: 'Failed to get product by ID' });
+      return Responses._400({ message: `Failed to get product by ID: ${ID}` });
   }
 
-  return Responses._200({ product: Promise.resolve(product) });
+  return Responses._200({ product });
 }

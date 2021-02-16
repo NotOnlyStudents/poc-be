@@ -18,5 +18,10 @@
     "ts-loader": "^8.0.17",
     "typescript": "^4.1.5",
     "webpack": "^5.21.2"
+  },
+  "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
+    "serverless": "^2.24.0"
   }
 }

@@ -1,10 +1,12 @@
 import { Handler } from 'aws-lambda';
+import { DynamoDB } from 'aws-sdk';
+import { DataMapper } from '@aws/dynamodb-data-mapper';
+
+import { Product, ProductBodyRequest } from '../types/Product';
 import { Responses } from '../common/responses';
-import { Dynamo } from '../common/Dynamo';
 
-import { ProductInterface } from '../types/Product';
-
-const productsTable: string = process.env.productsTable as string;
+const client = new DynamoDB();
+const mapper = new DataMapper({ client })
 
 export const handler: Handler = async (event: any) => {
   if (!event.pathParameters || !event.pathParameters.ID) {
@@ -13,16 +15,17 @@ export const handler: Handler = async (event: any) => {
 
   const ID = event.pathParameters.ID;
   
-  const product: ProductInterface = JSON.parse(event.body);
-  product.ID = ID;
+  const parsedBody: ProductBodyRequest = JSON.parse(event.body);
+  const product = new Product(ID, parsedBody.name, parsedBody.description, parsedBody.price);
 
-  const newProduct = await Dynamo.write(product, productsTable).catch(err => {
-      console.log('Error in dynamo write', err);
+  const putRes = await mapper.put(product).catch((err: any) => {
+    console.log('Error putting data on DynamoDB', err);
+    return null;
   });
 
-  if (!newProduct) {
-      return Responses._400({ message: 'Failed to get product by ID' });
+  if (!putRes) {
+    return Responses._400({ message: `Failed to put product: ${product}` });
   }
 
-  return Responses._200({ newProduct });
+  return Responses._200({ product });
 }
