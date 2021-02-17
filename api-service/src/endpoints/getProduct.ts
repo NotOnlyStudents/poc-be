@@ -17,13 +17,19 @@ export const handler: Handler = async (event: any) => {
   const ID = event.pathParameters.ID;
   const toFetchProduct = new Product(ID);
 
-  const product: Product = await mapper.get(toFetchProduct).catch((err: any) => {
-    console.log('Error fetching data from DynamoDB', err);
-    return null;
-  });
+  let product: Product;
+  await mapper
+    .get(toFetchProduct)
+    .then((item: Product) => {
+      product = item;
+    })
+    .catch((err: any) => {
+      console.log('Error fetching data from DynamoDB', err);
+      return null;
+    });
 
   if (!product) {
-      return Responses._400({ message: `Failed to get product by ID: ${ID}` });
+    return Responses._400({ message: `Failed to get product by ID: ${ID}` });
   }
 
   return Responses._200({ product });
