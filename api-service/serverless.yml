@@ -1,11 +1,11 @@
 service: api
 
+
 provider:
   name: aws
   runtime: nodejs12.x
   stage: dev
   region: eu-west-1
-  profile: sls-admin
   lambdaHashingVersion: 20201221
   environment:
     PRODUCTS_TABLE: ${self:custom.productsTable}
@@ -27,6 +27,8 @@ plugins:
 
 custom:
   productsTable: products-table
+  cognitoPoolId: eu-west-1_pLyAjCA0M
+  cognitoPoolCliId: 7cv4vjr9p3o5ttbgneucg1463c
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
@@ -56,7 +58,11 @@ functions:
           path: product/{ID}
           method: POST
           cors: true
-
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+ 
 resources:
   Resources: 
     ProductsTable: 
@@ -72,3 +78,13 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: Cognito
+        RestApiId: 7skg4i18y5 
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - arn:aws:cognito-idp:eu-west-1:501082649462:userpool/eu-west-1_pLyAjCA0M 

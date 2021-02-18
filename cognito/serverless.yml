@@ -6,16 +6,13 @@ provider:
   region: eu-west-1
   stage: dev
 
-custom:
-  stage: ${opt:stage, self:provider.stage}
-
 resources:
   Resources:
     # Cognito - User pool
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.stage}-user-pool
+        UserPoolName: ${self:provider.stage}-user-pool
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
@@ -33,7 +30,7 @@ resources:
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: ${self:custom.stage}-user-pool-client
+        ClientName: ${self:provider.stage}-user-pool-client
         UserPoolId:
           Ref: CognitoUserPool
         ExplicitAuthFlows:
@@ -43,7 +40,7 @@ resources:
     CognitoIdentityPool:
       Type: AWS::Cognito::IdentityPool
       Properties:
-        IdentityPoolName: ${self:custom.stage}-identity-pool
+        IdentityPoolName: ${self:provider.stage}-identity-pool
         AllowUnauthenticatedIdentities: false
         CognitoIdentityProviders:
           - ClientId:
