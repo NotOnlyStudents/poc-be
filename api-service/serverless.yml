@@ -1,0 +1,74 @@
+service: api
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+  profile: sls-admin
+  lambdaHashingVersion: 20201221
+  environment:
+    PRODUCTS_TABLE: ${self:custom.productsTable}
+  apiGateway:
+    shouldStartNameWithService: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: '*'
+
+package:
+  individually: true
+
+plugins:
+  - serverless-webpack
+
+custom:
+  productsTable: products-table
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+functions:
+  getProduct:
+    handler: src/endpoints/getProduct.handler
+    description: Get product by ID
+    events:
+      - http:
+          path: product/{ID}
+          method: GET
+          cors: true
+  getProducts:
+    handler: src/endpoints/getProducts.handler
+    description: Get all products
+    events:
+      - http:
+          path: products
+          method: GET
+          cors: true
+  postProduct:
+    handler: src/endpoints/postProduct.handler
+    description: Add a new product by ID
+    events:
+      - http:
+          path: product/{ID}
+          method: POST
+          cors: true
+
+resources:
+  Resources: 
+    ProductsTable: 
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.productsTable}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
