@@ -1,6 +1,5 @@
 service: api
 
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -27,6 +26,8 @@ package:
 
 plugins:
   - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-offline  
 
 custom:
   cartTable: cart-table
@@ -37,6 +38,15 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: offline/migrations
 
 functions:
   getProduct:

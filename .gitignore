@@ -99,7 +99,7 @@ dist
 
 # Serverless directories
 .serverless/
-.build
+.webpack
 
 # FuseBox cache
 .fusebox/
