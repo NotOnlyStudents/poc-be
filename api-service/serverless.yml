@@ -74,8 +74,8 @@ functions:
           method: POST
           cors: true
   postCart:
-    handler: src/endpoints/getCart.handler
-    description: Get the specified cart
+    handler: src/endpoints/postCart.handler
+    description: Add a new cart with a list of product.
     events:
       - http:
           path: cart

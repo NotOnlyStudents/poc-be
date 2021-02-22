@@ -1,12 +1,11 @@
 import { Handler } from 'aws-lambda';
-import { DynamoDB } from 'aws-sdk';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 
 import { Cart } from '../types/Cart';
 import { Responses } from '../common/responses';
+import DynamoDB from '../common/dynamodb';
 
-const client = new DynamoDB();
-const mapper = new DataMapper({ client })
+const mapper = new DataMapper({ client: DynamoDB });
 
 export const handler: Handler = async (event: any) => {
   console.log(event);

@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
-    "@aws/dynamodb-data-mapper-annotations": "^0.7.3"
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
+    "axios": "^0.21.1",
+    "stripe": "^8.137.0"
   }
 }
