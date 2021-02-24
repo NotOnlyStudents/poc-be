@@ -5,6 +5,7 @@ provider:
   runtime: nodejs12.x
   region: eu-west-1
   stage: dev
+  lambdaHashingVersion: 20201221
 
 resources:
   Resources:
@@ -36,14 +37,3 @@ resources:
         ExplicitAuthFlows:
           - ALLOW_ADMIN_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
-    # Cognito - Identity
-    CognitoIdentityPool:
-      Type: AWS::Cognito::IdentityPool
-      Properties:
-        IdentityPoolName: ${self:provider.stage}-identity-pool
-        AllowUnauthenticatedIdentities: false
-        CognitoIdentityProviders:
-          - ClientId:
-              Ref: CognitoUserPoolClient
-            ProviderName:
-              Fn::GetAtt: [CognitoUserPool, ProviderName]

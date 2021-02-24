@@ -7,7 +7,10 @@ provider:
   region: eu-west-1
   lambdaHashingVersion: 20201221
   environment:
+    REGION: ${self:provider.region}
+    CART_TABLE: ${self:custom.cartTable}
     PRODUCTS_TABLE: ${self:custom.productsTable}
+    STRIPE_SECRET_KEY: ${self:custom.stripeSecretKey}
   apiGateway:
     shouldStartNameWithService: true
   iam:
@@ -27,9 +30,11 @@ plugins:
   - serverless-offline  
 
 custom:
+  cartTable: cart-table
   productsTable: products-table
-  cognitoPoolId: eu-west-1_pLyAjCA0M
-  cognitoPoolCliId: 7cv4vjr9p3o5ttbgneucg1463c
+  stripeSecretKey: sk_test_51IHqhuEKthtArr3SXYScDHIOczJts6WLSVezPRwEu1ri7Yaka6fVjdkdIm4upAwTuZ2MSHchRcSKJgla0zt3TqbN00e2eqyOr2
+  cognitoPoolId: eu-west-1_GNvsrGORS
+  cognitoPoolCliId: 51v3gjhdbtq2mt0m1fb1asniae 
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
@@ -52,20 +57,40 @@ functions:
           path: product/{ID}
           method: GET
           cors: true
-  getProducts:
-    handler: src/endpoints/getProducts.handler
-    description: Get all products
+  getCart:
+    handler: src/endpoints/getCart.handler
+    description: Get the specified cart
     events:
       - http:
-          path: products
+          path: cart/{ID}
           method: GET
           cors: true
+  createCheckoutSession:
+    handler: src/endpoints/createCheckoutSession.handler
+    description: Create the checkout session with the specified cart products
+    events:
+      - http:
+          path: create-checkout-session/{CART_ID}
+          method: POST
+          cors: true
+  postCart:
+    handler: src/endpoints/postCart.handler
+    description: Add a new cart with a list of product.
+    events:
+      - http:
+          path: cart
+          method: POST
+          cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   postProduct:
     handler: src/endpoints/postProduct.handler
     description: Add a new product by ID
     events:
       - http:
-          path: product/{ID}
+          path: product
           method: POST
           cors: true
           authorizer: 
@@ -88,6 +113,19 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+    CartTable: 
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.cartTable}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
     ApiGatewayAuthorizer:
       Type: AWS::ApiGateway::Authorizer
       Properties:
@@ -97,4 +135,4 @@ resources:
         RestApiId: 7skg4i18y5 
         Type: COGNITO_USER_POOLS
         ProviderARNs:
-          - arn:aws:cognito-idp:eu-west-1:501082649462:userpool/eu-west-1_pLyAjCA0M 
+          - arn:aws:cognito-idp:eu-west-1:501082649462:userpool/eu-west-1_GNvsrGORS
