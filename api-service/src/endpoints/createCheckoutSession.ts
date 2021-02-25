@@ -49,7 +49,7 @@ export const handler: Handler = async (event: any) => {
             payment_method_types: ['card'],
             line_items: cartItems,
             mode: 'payment',
-            success_url: 'http://localhost:8080/purchase',
+            success_url: 'http://localhost:8080/purchased',
             cancel_url: 'http://localhost:8080/'
         });
 
