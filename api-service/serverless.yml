@@ -97,7 +97,6 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
- 
 resources:
   Resources: 
     ProductsTable: 
