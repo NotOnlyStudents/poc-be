@@ -7,9 +7,19 @@ import { Responses } from '../common/responses';
 import { Cart } from '../types/Cart';
 import { Product } from "../types/Product";
 
+let baseUrl: string;
+let clientBaseUrl: string;
+if (process.env.IS_OFFLINE) {
+    baseUrl = "http://localhost:3000";
+    clientBaseUrl = "http://localhost:8080";
+} else {
+    baseUrl = "https://api.annoiato.net";
+    clientBaseUrl = "https://shop.annoiato.net";
+}
+
 const getCart = async (cartID: string): Promise<Cart> => {
     try {
-        const resp = await axios.get<{cart: Cart}>("http://localhost:3000/dev/cart/" + cartID);
+        const resp = await axios.get<{cart: Cart}>(baseUrl+"/dev/cart/" + cartID);
 
         return resp.data.cart;
     } catch (error) {
@@ -49,8 +59,8 @@ export const handler: Handler = async (event: any) => {
             payment_method_types: ['card'],
             line_items: cartItems,
             mode: 'payment',
-            success_url: 'http://localhost:8080/purchased',
-            cancel_url: 'http://localhost:8080/'
+            success_url: clientBaseUrl+'/purchased',
+            cancel_url: clientBaseUrl+'/'
         });
 
         return Responses._200({ id: session.id });
