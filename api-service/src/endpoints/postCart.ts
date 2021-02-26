@@ -11,7 +11,7 @@ const mapper = new DataMapper({ client: DynamoDB });
 export const handler: Handler = async (event: any) => {
     const parsedBody: Cart = await JSON.parse(event.body);
     const products = parsedBody.products.map((item: Product) => {
-        return new Product(item.ID, item.name, item.description, item.price);
+        return new Product(item.ID, item.name, item.description, item.price, item.quantity);
     });
 
     const cart = new Cart(parsedBody.ID, products);

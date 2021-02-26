@@ -9,6 +9,7 @@ interface ProductBodyRequest {
     name: string;
     description: string;
     price: number;
+    quantity: number;
 }
 
 @table(process.env.PRODUCTS_TABLE)
@@ -24,11 +25,15 @@ export class Product implements ProductBodyRequest {
 
     @attribute()
     price: number;
+
+    @attribute()
+    quantity: number;
     
-    constructor(ID: string = '', name: string = '', description: string = '', price: number = 0) {
+    constructor(ID: string = '', name: string = '', description: string = '', price: number = 0.0, quantity: number = 1) {
         this.ID = ID;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.quantity = quantity;
     }
 }
