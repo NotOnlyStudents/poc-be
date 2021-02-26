@@ -27,7 +27,8 @@ package:
 plugins:
   - serverless-webpack
   - serverless-dynamodb-local
-  - serverless-offline  
+  - serverless-offline 
+  - serverless-domain-manager 
 
 custom:
   cartTable: cart-table
@@ -47,6 +48,11 @@ custom:
       migrate: true
     migration:
       dir: offline/migrations
+  customDomain:
+    domainName: api.annoiato.net
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
 
 functions:
   getProduct:
