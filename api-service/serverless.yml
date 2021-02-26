@@ -50,7 +50,7 @@ custom:
       dir: offline/migrations
   customDomain:
     domainName: api.annoiato.net
-    basePath: ''
+    basePath: ${self:provider.stage}
     stage: ${self:provider.stage}
     createRoute53Record: true
 
