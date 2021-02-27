@@ -9,6 +9,10 @@ import DynamoDB from '../common/dynamodb';
 const mapper = new DataMapper({ client: DynamoDB });
 
 export const handler: Handler = async (event: any) => {
+    if (!event.body) {
+        return Responses._400({ message: `Missing body from request.` });
+    }
+
     const parsedBody: Cart = await JSON.parse(event.body);
     const products = parsedBody.products.map((item: Product) => {
         return new Product(item.ID, item.name, item.description, item.price, item.quantity);

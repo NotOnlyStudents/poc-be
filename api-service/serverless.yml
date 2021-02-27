@@ -79,6 +79,18 @@ functions:
           path: create-checkout-session/{CART_ID}
           method: POST
           cors: true
+  emptyCart:
+    handler: src/endpoints/emptyCart.handler
+    description: Empty the cart with ID.
+    events:
+      - http:
+          path: empty-cart/{CART_ID}
+          method: PATCH
+          cors: true
+          authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
   postCart:
     handler: src/endpoints/postCart.handler
     description: Add a new cart with a list of product.
