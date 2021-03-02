@@ -1,5 +1,5 @@
 // pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl
-import { Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
 import axios from 'axios';
 import Stripe from 'stripe';
 
@@ -19,23 +19,23 @@ if (process.env.IS_OFFLINE) {
 
 const getCart = async (cartID: string): Promise<Cart> => {
     try {
-        const resp = await axios.get<{cart: Cart}>(baseUrl+"/dev/cart/" + cartID);
-
+        const resp = await axios.get<{ cart: Cart }>(`${baseUrl}/dev/cart/${cartID}`);
         return resp.data.cart;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 };
 
-export const handler: Handler = async (event: any) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent) => {
     console.log(event);
     if (!event.pathParameters || !event.pathParameters.CART_ID) {
-        Responses._400({ message: `Missing the ID from the path` });
+        return Responses._400({ message: `Missing the ID from the path` });
     }    
 
+    const ID = event.pathParameters.CART_ID;
+
     try {
-        const cart = await getCart(event.pathParameters.CART_ID);
+        const cart = await getCart(ID);
 
         const cartItems = cart.products.map((item: Product) => {
             return {
@@ -59,13 +59,14 @@ export const handler: Handler = async (event: any) => {
             payment_method_types: ['card'],
             line_items: cartItems,
             mode: 'payment',
+            // TODO: redirect to backend
             success_url: clientBaseUrl+'/purchased',
             cancel_url: clientBaseUrl+'/'
         });
 
         return Responses._200({ id: session.id });
     } catch (error) {
-        console.log(`Error while getting the ${event.pathParameters.CART_ID} cart - ${error}`);
-        return Responses._400({ message: `Error while getting the ${event.pathParameters.CART_ID} cart.` });
+        console.error(`Error while getting the ${ID} cart - ${error}`);
+        return Responses._400({ message: `Error while getting the ${ID} cart.` });
     }
 }

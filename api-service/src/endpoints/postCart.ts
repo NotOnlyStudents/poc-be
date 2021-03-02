@@ -1,4 +1,4 @@
-import { Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 
 import { Cart } from '../types/Cart';
@@ -8,8 +8,8 @@ import DynamoDB from '../common/dynamodb';
 
 const mapper = new DataMapper({ client: DynamoDB });
 
-export const handler: Handler = async (event: any) => {
-    if (!event.body) {
+export const handler: Handler = async (event: APIGatewayProxyEvent) => {
+    if (!event.body || !(JSON.parse(event.body) as Cart)) {
         return Responses._400({ message: `Missing body from request.` });
     }
 
@@ -20,14 +20,12 @@ export const handler: Handler = async (event: any) => {
 
     const cart = new Cart(parsedBody.ID, products);
 
-    const putRes = await mapper.put(cart).catch((err: any) => {
-        console.log('Error putting data on DynamoDB', err);
-        return null;
-    });
+    try {
+        await mapper.put(cart);
 
-    if (!putRes) {
+        return Responses._200({ cart });
+    } catch (error) {
+        console.error('Error putting data on DynamoDB', error);
         return Responses._400({ message: `Failed to put cart with id: ${cart.ID}` });
     }
-
-    return Responses._200({ cart });
 }
