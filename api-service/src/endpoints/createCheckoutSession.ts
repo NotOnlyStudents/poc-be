@@ -1,5 +1,5 @@
 // pk_test_51IHqhuEKthtArr3S4MYSAYFEPiFlioccyA4SjUNArmmdSmK7B05UnMdsNKIu0TCRXADZLVmjEUlqKRIR4D2SWtJ700PVmechEl
-import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import axios from 'axios';
 import Stripe from 'stripe';
 
@@ -26,7 +26,7 @@ const getCart = async (cartID: string): Promise<Cart> => {
     }
 };
 
-export const handler: Handler = async (event: APIGatewayProxyEvent) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     console.log(event);
     if (!event.pathParameters || !event.pathParameters.CART_ID) {
         return Responses._400({ message: `Missing the ID from the path` });

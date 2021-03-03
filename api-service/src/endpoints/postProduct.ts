@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import { DataMapper } from '@aws/dynamodb-data-mapper';
 
 import { Product } from '../types/Product';
@@ -7,7 +7,7 @@ import DynamoDB from '../common/dynamodb';
 
 const mapper = new DataMapper({ client: DynamoDB });
 
-export const handler: Handler = async (event: APIGatewayProxyEvent) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   console.log(event);
   if (!event.body || !(JSON.parse(event.body) as Product)) {
     return Responses._400({ message: `Missing body from request.` });
