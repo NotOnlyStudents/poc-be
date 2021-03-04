@@ -1,6 +1,0 @@
-{
-    "plugins": [
-        "yaml"
-    ],
-    "extends": ["plugin:yaml/recommended"]
-}
