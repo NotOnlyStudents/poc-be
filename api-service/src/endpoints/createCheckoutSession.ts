@@ -21,14 +21,8 @@ if (process.env.IS_OFFLINE) {
 }
 
 const getCart = async (cartID: string): Promise<Cart> => {
-  try {
-    const resp = await axios.get<{ cart: Cart }>(
-      `${baseUrl}/dev/cart/${cartID}`
-    );
-    return resp.data.cart;
-  } catch (error) {
-    console.log(error);
-  }
+  const resp = await axios.get<{ Cart }>(`${baseUrl}/dev/cart/${cartID}`);
+  return resp.data.cart;
 };
 
 const handler: Handler = async (
