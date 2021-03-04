@@ -10,7 +10,8 @@
         "removeComments": true,
         "sourceMap": true,
         "target": "ES2019",
-        "outDir": "lib"
+        "outDir": "lib",
+        // "esModuleInterop": true
     },
     "include": [
         "src/**/*.ts"
@@ -20,6 +21,7 @@
         ".serverless/**/*",
         ".webpack/**/*",
         "_warmup/**/*",
-        ".vscode/**/*"
+        ".vscode/**/*",
+        "tests/**/*"
     ]
 }
