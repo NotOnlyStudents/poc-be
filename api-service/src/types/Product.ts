@@ -29,7 +29,7 @@ export class Product implements ProductBodyRequest {
     @attribute()
     quantity: number;
     
-    constructor(ID: string = '', name: string = '', description: string = '', price: number = 0.0, quantity: number = 1) {
+    constructor(ID = '', name = '', description = '', price = 0.0, quantity = 1) {
         this.ID = ID;
         this.name = name;
         this.description = description;

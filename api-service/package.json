@@ -6,7 +6,9 @@
   "scripts": {
     "deploy": "serverless deploy",
     "start:local": "serverless offline start",
-    "install-db:local": "serverless dynamodb install"
+    "install-db:local": "serverless dynamodb install",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint -- --fix"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +16,10 @@
     "@serverless/typescript": "^2.16.0",
     "@types/aws-lambda": "^8.10.72",
     "@types/node": "^14.14.28",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
     "aws-sdk": "^2.846.0",
+    "eslint": "^7.21.0",
     "fork-ts-checker-webpack-plugin": "^6.0.0",
     "json-schema-to-ts": "^1.4.1",
     "serverless-domain-manager": "^5.1.0",

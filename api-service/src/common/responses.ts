@@ -1,5 +1,5 @@
 export const Responses = {
-    _200(data = {}) {
+    _200(data = {}): Response {
         return { 
             headers: {
                 'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ export const Responses = {
             body: JSON.stringify(data)
         };
     },
-    _400(data = {}) {
+    _400(data = {}): Response {
         return { 
             headers: {
                 'Content-Type': 'application/json',

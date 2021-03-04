@@ -19,7 +19,7 @@ export class Cart implements CartBodyRequest {
     @attribute({ memberType: embed(Product) })
     products: Product[];
 
-    constructor(ID: string = '', products: Product[] = []) {
+    constructor(ID = '', products: Product[] = []) {
         this.ID = ID;
         this.products = products
     }

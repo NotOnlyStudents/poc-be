@@ -21,7 +21,7 @@ const getCart = async (cartID: string): Promise<Cart> => {
         const resp = await axios.get<{ cart: Cart }>(`${baseUrl}/dev/cart/${cartID}`);
         return resp.data.cart;
     } catch (error) {
-        throw error;
+	console.log(error);	
     }
 };
 
