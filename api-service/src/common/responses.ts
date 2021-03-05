@@ -1,5 +1,7 @@
+import Response from "../types/Response";
+
 const Responses = {
-  success(data = {}): unknown {
+  success(data = {}): Response {
     return {
       headers: {
         "Content-Type": "application/json",
@@ -10,7 +12,7 @@ const Responses = {
       body: JSON.stringify(data),
     };
   },
-  userError(data = {}): unknown {
+  userError(data = {}): Response {
     return {
       headers: {
         "Content-Type": "application/json",
