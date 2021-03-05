@@ -9,6 +9,6 @@ module.exports = {
             AttributeName: "ID",
             AttributeType: "S"
         }],
-        BillingMode: 'PY_PER_REQUEST'
+        BillingMode: 'PAY_PER_REQUEST'
     }]
 }

@@ -12,7 +12,7 @@ interface ProductBodyRequest {
     quantity: number;
 }
 
-@table(process.env.PRODUCTS_TABLE)
+@table("products-table")
 export class Product implements ProductBodyRequest {
     @hashKey()
     ID: string;
