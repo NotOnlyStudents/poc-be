@@ -1,20 +1,14 @@
-// import { describe, it } from "mocha";
-// import { expect } from "chai";
-// import * as sinon from "sinon";
 import { expect, describe, it } from '@jest/globals'
-
-import { Responses } from "../src/common/responses";
-
-// sinon.stub(console, 'error');
+import Responses from "../src/common/responses";
 
 describe('Response', () => {
     it('Creating a 200 response is successful', async () => {
-        const response = Responses._200();
+        const response = Responses.success();
         expect(response.statusCode).toEqual(200);
     });
 
     it('Creating a 400 response is successful', async () => {
-        const response = Responses._400();
+        const response = Responses.userError();
         expect(response.statusCode).toEqual(400);
     });
 });

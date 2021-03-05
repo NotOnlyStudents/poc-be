@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { postProduct } from "../src/endpoints/postProduct";
 
-import { Product } from "../src/types/Product";
+import Product from "../src/types/Product";
 
 test('Post poroduct successful', async () => {
     const product = new Product('1', 'Adidas', 'Shoes', 13090, 2);

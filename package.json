@@ -2,12 +2,6 @@
   "name": "poc-be",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "deploy": "serverless de",
-    "lint": "npm run lint:yaml",
-    "lint:yaml": "eslint --fix . --ext .yml"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NotOnlyStudents/poc-be.git"
@@ -17,9 +11,5 @@
   "bugs": {
     "url": "https://github.com/NotOnlyStudents/poc-be/issues"
   },
-  "homepage": "https://github.com/NotOnlyStudents/poc-be#readme",
-  "devDependencies": {
-    "eslint": "^7.19.0",
-    "eslint-plugin-yaml": "^0.3.0"
-  }
+  "homepage": "https://github.com/NotOnlyStudents/poc-be#readme"
 }

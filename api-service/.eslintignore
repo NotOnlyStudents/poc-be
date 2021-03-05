@@ -1,0 +1,6 @@
+node_modules
+.eslintrc.js
+webpack.config.js
+jest-dynamodb-config.js
+jest.config.js
+tests
