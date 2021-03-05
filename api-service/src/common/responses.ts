@@ -1,4 +1,3 @@
-
 const Responses = {
   success(data = {}): unknown {
     return {

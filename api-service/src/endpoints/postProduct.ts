@@ -3,7 +3,7 @@ import {
   APIGatewayProxyResult,
   Handler,
   Context,
-  Callback
+  Callback,
 } from "aws-lambda";
 import { DataMapper } from "@aws/dynamodb-data-mapper";
 
@@ -15,7 +15,9 @@ const postProduct = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   if (!event.body || !(JSON.parse(event.body) as Product)) {
-    return Responses.userError({ message: `Missing body from request.` }) as APIGatewayProxyResult;
+    return Responses.userError({
+      message: `Missing body from request.`,
+    }) as APIGatewayProxyResult;
   }
 
   const mapper = new DataMapper({ client: DynamoDB });
